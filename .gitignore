@@ -1,0 +1,24 @@
+# === 私钥 / 服务器凭证：绝不提交 ===
+服务器信息和密钥.txt
+.ssh_key
+.ssh_key_test
+
+# === 根目录下的临时调试脚本（保留 scripts/setup.sh 与 scripts/run.sh）===
+/*.sh
+
+# === 内部文档（课题原文 / 答辩材料）===
+SPEC-BQ.md
+答辩报告.md
+
+# === IDE / 工具私有目录 ===
+.trae/
+.vscode/
+.idea/
+
+# === Rust 构建产物 ===
+target/
+**/target/
+
+# === 系统文件 ===
+.DS_Store
+Thumbs.db

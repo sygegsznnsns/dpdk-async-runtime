@@ -1,0 +1,13 @@
+[package]
+name = "dpdk-runtime"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+futures-core = "0.3"
+futures-util = { version = "0.3", default-features = false, features = ["alloc"] }
+
+[build-dependencies]
+bindgen = { version = "0.70", features = ["runtime"] }
+pkg-config = "0.3"
+cc = "1"
