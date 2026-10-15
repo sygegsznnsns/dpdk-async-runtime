@@ -175,6 +175,8 @@ sudo DPDK_PCI_BDF=0000:28:00.0 ./scripts/setup.sh
 
 测试环境：AWS c8a.xlarge（AMD EPYC 9R45，4 物理核无超线程），DPDK 22.11.4，ENA 网卡，64 路并发，10 分钟连续运行。
 
+> 完整延迟报告与原始运行日志见 [`results/`](results/)（[`latency-report.md`](results/latency-report.md) + A/B/C 运行日志）。
+
 ### 硬门槛验证
 
 | 指标 | async-ping (A) | raw-ping (B) |

@@ -1,0 +1,29 @@
+EAL: Detected CPU lcores: 4
+EAL: Detected NUMA nodes: 1
+EAL: Detected shared linkage of DPDK
+EAL: Multi-process socket /var/run/dpdk/rte/mp_socket
+EAL: Selected IOVA mode 'PA'
+EAL: VFIO support initialized
+EAL: Using IOMMU type 8 (No-IOMMU)
+EAL: Probe PCI driver: net_ena (1d0f:ec20) device: 0000:28:00.0 (socket 0)
+TELEMETRY: No legacy callbacks, legacy socket not created
+mempool initial avail_count = 8191
+ena_mtu_set(): MTU set to: 1500
+local_mac = 06:ff:cf:7c:76:8f
+target_ip = 10.202.8.15  local_ip = 10.202.15.212
+sessions = 64  delay_us = 500  payload = 64B  duration = 600s
+=== Latency Summary (duration=600s) ===
+sent=58905018 received=58905016 timeouts=0
+loss=0.0000%
+
+in-process (ns)      n=58905016   p50=80         p90=290        p99=600        p99.9=2470       p99.99=2900       max=470955    
+seg1 send (ns)       n=58905016   p50=70         p90=250        p99=440        p99.9=2430       p99.99=2670       max=470955    
+seg2 recv (ns)       n=58905016   p50=10         p90=100        p99=190        p99.9=280        p99.99=2250       max=67730     
+e2e (ns)             n=58905016   p50=152351     p90=156071     p99=161351     p99.9=285983     p99.99=356284     max=1304494   
+seg3 (ns)            n=58905018   p50=20         p90=20         p99=30         p99.9=590        p99.99=890        max=698818    
+sleep_error (ns)     n=58905018   p50=215        p90=505        p99=996        p99.9=2385       p99.99=6855       max=1175908   
+=== End Summary ===
+ena_rx_queue_release(): Rx queue 0:0 released
+ena_tx_queue_release(): Tx queue 0:0 released
+mempool final avail_count = 8191 (initial = 8191)
+mbuf leak check: OK (no leak)

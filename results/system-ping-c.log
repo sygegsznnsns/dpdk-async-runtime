@@ -1,0 +1,5 @@
+PING 10.202.8.15 (10.202.8.15) 56(84) bytes of data.
+
+--- 10.202.8.15 ping statistics ---
+60000 packets transmitted, 60000 received, 0% packet loss, time 59998ms
+rtt min/avg/max/mdev = 0.092/0.097/0.280/0.002 ms
