@@ -58,7 +58,7 @@
 
 主循环 [block_on](dpdk-runtime/src/rt/executor.rs) 把三者缝在一起：`poll 主 future → timer.process_due() → reactor.poll_once() → run_ready()`。这就是 **poll-mode 与 async 的融合**——没有 epoll / io_uring，网卡轮询是唯一的 I/O 事件源。
 
-**一句话**：runtime 让每个 session 写成直白的 `loop { send().await; wait_reply().await; sleep().await }`，而不是退化成一个巨大的 `match` + callback 状态机；它为此收的税，就体现在段②里"解析 → wake → ready queue → poll → future 恢复"这条链路上（约 210 ns，p50，即下文 A − B 的差）。
+**一句话**：runtime 让每个 session 写成直白的 `loop { send().await; wait_reply().await; sleep().await }`，而不是退化成一个巨大的 `match` + callback 状态机；它为此收的税，就体现在段②里"解析 → wake → ready queue → poll → future 恢复"这条链路上（约 220 ns，p50，即下文 A − B 的差）。
 
 ## 测量口径
 
@@ -181,30 +181,30 @@ sudo DPDK_PCI_BDF=0000:28:00.0 ./scripts/setup.sh
 
 | 指标 | async-ping (A) | raw-ping (B) |
 |------|----------------|--------------|
-| 发送包数 | 58,919,444 | 59,094,234 |
-| 接收包数 | 58,919,444 | 59,094,232 |
+| 发送包数 | 59,348,548 | 58,905,018 |
+| 接收包数 | 59,348,548 | 58,905,016 |
 | 丢包率 | 0.0000% | 0.0000% |
 | 崩溃 | 无 | 无 |
-| mbuf 泄漏 | 无（62 个 ENA 驱动内部残留） | 无 |
+| mbuf 泄漏 | 无（59 个 ENA 驱动内部残留） | 无（精确回到初值） |
 
 ### 进程内耗时对比（10 分钟）
 
 | 指标 | async-ping (A) | raw-ping (B) | A − B |
 |------|----------------|--------------|-------|
-| **in-process p50** | 370 ns | 80 ns | **+290 ns** |
-| in-process p90 | 500 ns | 320 ns | +180 ns |
-| **in-process p99** | 1330 ns | 490 ns | **+840 ns** |
-| in-process p99.9 | 2940 ns | 2440 ns | +500 ns |
-| in-process p99.99 | 4239 ns | 2790 ns | +1449 ns |
+| **in-process p50** | 400 ns | 80 ns | **+320 ns** |
+| in-process p90 | 530 ns | 290 ns | +240 ns |
+| **in-process p99** | 1419 ns | 600 ns | **+819 ns** |
+| in-process p99.9 | 2870 ns | 2470 ns | +400 ns |
+| in-process p99.99 | 4010 ns | 2900 ns | +1110 ns |
 
 ### 分段耗时（p50）
 
 | 段 | async-ping (A) | raw-ping (B) | 差值 |
 |----|----------------|--------------|------|
-| 段① 发送 (T1−T0) | 70 ns | 70 ns | 0 ns |
-| 段② 接收 (T3−T2) | 220 ns | 10 ns | **+210 ns** |
+| 段① 发送 (T1−T0) | 170 ns | 70 ns | +100 ns |
+| 段② 接收 (T3−T2) | 230 ns | 10 ns | **+220 ns** |
 
-异步抽象开销主要集中在**段②**（接收分发路径）：解析 → session 匹配 → `wake()` → ready queue → executor 出队 → `poll()` → future 恢复，约 **210 ns**（p50）。
+异步抽象开销主要集中在**段②**（接收分发路径）：解析 → session 匹配 → `wake()` → ready queue → executor 出队 → `poll()` → future 恢复，约 **220 ns**（p50）。
 
 ### 端到端延迟参考
 
